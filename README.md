@@ -1,6 +1,6 @@
 # Diabetic Retinopathy Severity Grader
 
-## Priyanshu Branch
+## Main Branch
 
 This branch contains the Priyanshu-specific project content for the diabetic retinopathy severity grading work.
 

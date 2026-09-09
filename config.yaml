@@ -1,0 +1,23 @@
+seed: 42
+data:
+  root: "APTOS 2019 dataset"
+  train_csv: train_1.csv
+  val_csv: valid.csv
+  train_images: train_images
+  val_images: val_images
+model:
+  backbone: resnet50 # resnet50 | efficientnet_b3
+  pretrained: true
+  num_classes: 5
+training:
+  image_size: 224
+  batch_size: 16
+  epochs: 12
+  warmup_epochs: 1
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  num_workers: 2
+  sampler: true
+  loss: class_balanced_focal # ce | weighted_ce | focal | class_balanced_focal
+  focal_gamma: 2.0
+  effective_num_beta: 0.999

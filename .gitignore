@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+outputs/
+*.pt
+.ipynb_checkpoints/
+
+APTOS 2019 dataset
+dr_grader_build_prompt.md
+results_report.md

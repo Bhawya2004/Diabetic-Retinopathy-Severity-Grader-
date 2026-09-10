@@ -1,6 +1,6 @@
 # Diabetic Retinopathy Severity Grader (PyTorch + FastAPI + React)
 
-A five-class deep learning application for Diabetic Retinopathy severity grading (Grades 0–4) trained on APTOS 2019 retinal fundus images with imbalance mitigation (weighted cross-entropy / focal loss) and visual explainability via Grad-CAM.
+A full-stack deep learning application for Diabetic Retinopathy severity grading (Grades 0–4) trained on APTOS 2019 retinal fundus images with imbalance mitigation (weighted cross-entropy / focal loss), visual explainability via Grad-CAM, a FastAPI backend, and a vibrant React (Vite) frontend.
 
 ---
 
@@ -31,57 +31,65 @@ Diabetic-Retinopathy-Severity-Grader/
 │   ├── inference.py                   # Singleton model loader, inference & Grad-CAM pipeline
 │   └── schemas.py                     # Pydantic request/response data contracts
 │
+├── frontend/                          # React + Vite Web UI
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx             # Brand header with live API status & device indicator
+│   │   │   ├── ImageUpload.jsx        # Drag-and-drop file upload & fundus preview
+│   │   │   ├── PredictButton.jsx      # Action trigger with animated loading state
+│   │   │   ├── ResultDisplay.jsx      # Visual Grad-CAM comparison & probability bars
+│   │   │   └── Disclaimer.jsx         # Clinical screening advisory
+│   │   ├── api/
+│   │   │   └── predict.js             # API client connecting to FastAPI /predict
+│   │   └── styles/
+│   │       └── App.css                # Bright, warm clinical color palette
+│   └── index.html
+│
 ├── results/
 │   ├── figures/                       # Confusion matrices and class distribution charts
 │   ├── ablation_table.csv             # Comparative ablation results
 │   ├── baseline_metrics.json          # Baseline model performance metrics
 │   └── final_metrics.json             # Final model performance metrics
 │
+├── archive/                           # Preserved legacy scripts & historical outputs
 └── .venv/                             # Python virtual environment (gitignored)
 ```
 
 ---
 
-## 2. Environment Setup
+## 2. How to Run the Full-Stack Application
 
-A dedicated virtual environment `.venv` is configured. To activate it:
+Run the backend and frontend simultaneously in **two side-by-side terminal tabs**:
 
-### On macOS / Linux:
+### Terminal 1 — Backend (FastAPI)
 ```bash
+# 1. Activate the virtual environment
 source .venv/bin/activate
-```
 
-### On Windows (PowerShell):
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-To install or update dependencies:
-```bash
-pip install -r backend/requirements.txt
-```
-
----
-
-## 3. Running the FastAPI Backend
-
-Start the FastAPI server:
-```bash
+# 2. Start FastAPI on port 8000
 uvicorn backend.main:app --reload --port 8000
 ```
-- **Interactive API Docs (Swagger UI)**: [http://localhost:8000/docs](http://localhost:8000/docs)
-- **Health Check**: `GET http://localhost:8000/health`
-- **Prediction & Grad-CAM**: `POST http://localhost:8000/predict` (Accepts multipart `file=@image.jpg`)
+- API Health: [http://localhost:8000/health](http://localhost:8000/health)
+- Swagger Documentation: [http://localhost:8000/docs](http://localhost:8000/docs)
 
-### Testing via curl:
+### Terminal 2 — Frontend (React + Vite)
 ```bash
-curl -X POST -F "file=@datasets/IDRiD-dataset/Imagenes/Imagenes/IDRiD_001.jpg" http://localhost:8000/predict
+# 1. Navigate to frontend directory
+cd frontend
+
+# 2. Start the Vite development server
+npm run dev
 ```
+- Open the web application: **[http://localhost:5173](http://localhost:5173)**
 
 ---
 
-## 4. Model & Explainability Highlights
+## 3. UI Features & Design Highlights
 
-- **Backbone**: Pretrained ResNet-50 fine-tuned on fundus imagery.
-- **Hardware Acceleration**: Automatically utilizes Apple Silicon Metal (`mps`), CUDA (`cuda`), or CPU fallback.
-- **Visual Explainability**: Grad-CAM targets `layer4[-1]` of ResNet-50, generating a normalized heatmap and blending it with the preprocessed retinal image using the `jet` colormap for clinician interpretability.
+- **Vibrant Color Palette**: Styled with a warm, modern palette (Sunset Coral, Sunny Amber, Tangerine, and Fresh Emerald on soft cream surfaces — avoiding dark mode and corporate blues).
+- **Interactive Grad-CAM Heatmap Viewer**: Side-by-side or toggled view displaying where the CNN detected diabetic lesions (microaneurysms, hemorrhages, hard exudates).
+- **Multi-Class Probability Distribution**: Horizontal color-coded meters for all 5 severity stages (Grades 0 to 4).
+- **Clinical Risk & Protocol Guidance**: Automated clinical next steps based on predicted stage.
